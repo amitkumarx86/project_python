@@ -17,7 +17,7 @@ def download_video(ilink):
     output = subprocess.check_output(['bash','-c', bashCommnad])
     print output
 
-# -------------------------------------------------------------------------------
+# ------------------------------------------------------------------------------
 # start of the code
 #-------------------------------------------------------------------------------
 search_keyword_1=raw_input("Enter search keyword:")
