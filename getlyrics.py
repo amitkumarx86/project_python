@@ -47,7 +47,7 @@ def __getLyrics(searchString):
         for divHolder in soup.findAll('div', { "id" : "lyric" }):
             print str(divHolder).replace("<br />","\n").replace("<p>","\n").replace("</p>","\n").replace("<div id=\"lyric\"><h2>","").replace("</h2>","\n").replace("</div>","")
     elif "hindilyrics" in str(finalLink):
-        print finalLink
+        #print finalLink
         opener = urllib2.build_opener()
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         page = opener.open(finalLink)

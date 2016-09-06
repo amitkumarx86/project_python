@@ -17,7 +17,7 @@ def __getLyrics(searchString):
         #print finalLink
         if "songlyricsmint" in finalLink or "/.../" in finalLink: 
             continue
-        if "azlyrics" in finalLink or "lyricsmint" in finalLink or "hindilyrics" in finalLink:
+        if "azlyrics" in finalLink or "lyricsmint" in finalLink or "hindilyrics" in finalLink or "darklyrics.com" in finalLink:
             break
     finalLink="http://"+finalLink
     #print finalLink
@@ -47,13 +47,23 @@ def __getLyrics(searchString):
         for divHolder in soup.findAll('div', { "id" : "lyric" }):
             print str(divHolder).replace("<br />","\n").replace("<p>","\n").replace("</p>","\n").replace("<div id=\"lyric\"><h2>","").replace("</h2>","\n").replace("</div>","")
     elif "hindilyrics" in str(finalLink):
-        print finalLink
+        #print finalLink
         opener = urllib2.build_opener()
         opener.addheaders = [('User-agent', 'Mozilla/5.0')]
         page = opener.open(finalLink)
         soup = BeautifulSoup(page)
         for divHolder in soup.find('pre'):
             print ''.join(str(e) for e in str(divHolder.contents)).replace("[u","").replace("(","").replace(")","").replace("'\\n\\n","").replace("\\r","\n").replace("\\n']","")
+    elif "darklyrics.com" in str(finalLink):
+        #print finalLink
+        opener = urllib2.build_opener()
+        opener.addheaders = [('User-agent', 'Mozilla/5.0')]
+        page = opener.open(finalLink)
+        soup = BeautifulSoup(page)
+        print soup.findAll('div',{"class":"lyrics"})
+        #for div in soup.findAll('div',{"class":"lyrics"}):
+            #print div
+        
     else:
         print "Lyrics not found"
 
