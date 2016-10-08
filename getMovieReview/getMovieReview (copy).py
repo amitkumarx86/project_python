@@ -56,24 +56,6 @@ def getMovieReview(searchString):
 				for i in range(space+1):
 					spaceString+=' '
 				print creditList[0].strip()+spaceString+":"+' '+creditList[1].strip('\n').strip().replace('|','').replace('    ','')
-
-			# about similer movies
-			similer_movie_var = soup.find("div",  {"class":"rec_slide"}).findAll("div")
-			suggested_movies = list()
-			for similer_movie_item in similer_movie_var:
-				if similer_movie_item.find("img"):
-					suggested_movies.append(similer_movie_item.find("img").get('alt',''))
-			
-			print "............................."*5
-			print "Suggested Movies..."
-			i=1
-			for movie in set(suggested_movies):
-				print str(i)+'. '+movie
-				i=i+1
-				if i > 9 :
-					break
-
-
 		else:
 			print "Movie not yet rated."
 			print "Plot     : "+newPlot
