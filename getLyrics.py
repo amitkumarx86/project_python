@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 import sys
 import urllib2 
-from BeautifulSoup import BeautifulSoup
+from bs4 import BeautifulSoup
 
 
 def __getLyrics(searchString):

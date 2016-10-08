@@ -1,0 +1,3 @@
+python program to get reviews from imdb, it uses beautiful soup to first search in google and then uses imdb website to get data about a movie,
+why not directly search imdb ?
+Because getting head  over search is a bit tedious task.
