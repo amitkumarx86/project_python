@@ -8,7 +8,7 @@ import os
 
 class ImageProcessor(QMainWindow):
     
-    global image, l1, grayScaleBtn, gaussianBlurBtn, cannyBtn, houghPBtn, houghBtn, sobelXBtn, sobelYBtn, laplacianBtn,\
+    global image, l1, grayScaleBtn, gaussianBlurBtn, cannyBtn, houghPBtn, houghBtn, sobelXBtn, sobelYBtn, prewittXBtn, prewittYBtn, laplacianBtn,\
     simpleThresBtn, adaptiveThresGaussianBtn, otsuThresBtn, adaptiveMeanThresBtn, undoBtn, saveBtn
 
     # stack for undo
@@ -30,7 +30,7 @@ class ImageProcessor(QMainWindow):
         # add menu 
         self.addMenuInWindow()
         #function pallet
-        self.pallet = QDockWidget("OpenCV Functions", self)
+        self.pallet = QDockWidget("", self)
         self.pallet.setFloating(False)
         self.pallet.setFeatures(QDockWidget.DockWidgetMovable) # this makes pallet not rigid
         # adding buttons to pallet
@@ -38,43 +38,8 @@ class ImageProcessor(QMainWindow):
         
         # PixMap image label
         self.l1 = QLabel()
-        self.l1.resize(1000, 1000)
-    	
-        # pallet for save button
-        self.savePallet = QDockWidget("Image",self)
-        self.savePallet.setFloating(False)
-        self.savePallet.setFeatures(QDockWidget.DockWidgetMovable)
-        self.savePallet.resize(QSize(100, 100))
-
-        self.saveBtn = QPushButton("Save")
-        self.saveBtn.setMaximumWidth(100)
         
-        
-        saveIcon = QIcon()
-        saveIcon.addPixmap(QPixmap("./icons/save.png"))
-        
-        self.saveBtn.setIcon(saveIcon)
-        self.saveBtn.setStyleSheet('QPushButton { background-color: #04942a; border-color: #0b6d13;}')
-        self.saveBtn.clicked.connect(self.saveFun)
-        self.multiWidget = QWidget()
-        self.vbox = QVBoxLayout()
-        
-        self.vbox.addWidget(self.l1)
-        self.vbox.addWidget(self.saveBtn)
-        
-        #self.hbox.addStretch()
-        #self.hbox.addWidget(self.saveBtn)
-        
-        #self.multiWidgetBottom.setLayout(self.hbox)
-
-
-        #self.vbox.addWidget(self.multiWidgetBottom)
-        self.multiWidget.setLayout(self.vbox)
-
-        #self.savePallet.setWidget(self.multiWidget)
-        # adding pallet and QLabel to main window
-        
-        self.setCentralWidget(self.multiWidget)
+        self.setCentralWidget(self.l1)
         self.addDockWidget(Qt.LeftDockWidgetArea, self.pallet)
         self.setGeometry(0,0,2000,2000)
         self.setWindowTitle("Image Processor")
@@ -90,6 +55,11 @@ class ImageProcessor(QMainWindow):
         openFile.triggered.connect(self.getImage)
         file.addAction(openFile)
         
+        saveFile = QAction("Save",self)
+        saveFile.setShortcut("Ctrl+S")
+        saveFile.triggered.connect(self.saveImage)
+        file.addAction(saveFile)
+
         quit = QAction("Quit",self)
         quit.setShortcut("Ctrl+Q")
         quit.triggered.connect(self.closingFun)
@@ -138,6 +108,12 @@ class ImageProcessor(QMainWindow):
         self.sobelYBtn = QPushButton("SobelY Edge Detection")
         self.sobelYBtn.clicked.connect(self.sobelYFun)
 
+        self.prewittXBtn = QPushButton("PrewittX Edge Detection")
+        self.prewittXBtn.clicked.connect(self.prewittXFun)
+
+        self.prewittYBtn = QPushButton("PrewittY Edge Detection")
+        self.prewittYBtn.clicked.connect(self.prewittYFun)
+
         self.laplacianBtn = QPushButton("Laplacian Edge Detection")
         self.laplacianBtn.clicked.connect(self.laplacianFun)
         
@@ -159,10 +135,18 @@ class ImageProcessor(QMainWindow):
         self.nextBtn.setStyleSheet('QPushButton { background-color: #5033c5; border-color: #0b6d13;}')
         self.nextBtn.clicked.connect(self.nextPic)
         
+        self.openBtn = QPushButton("Open")
+        openBtn = QIcon()
+        openBtn.addPixmap(QPixmap("./icons/open.png"))
+        self.openBtn.setIcon(openBtn)
+        self.openBtn.setStyleSheet('QPushButton { background-color: #5033c5; border-color: #0b6d13;}')
+        self.openBtn.clicked.connect(self.getImage)
 
         hbox = QHBoxLayout()
-        hbox.addWidget(self.undoBtn)
+        
+        hbox.addWidget(self.openBtn)
         hbox.addWidget(self.nextBtn)
+        hbox.addWidget(self.undoBtn)
         #hbox.addWidget(self.saveBtn)
         undoAndSaveParent.setLayout(hbox)
 
@@ -185,6 +169,10 @@ class ImageProcessor(QMainWindow):
         vbox.addWidget(self.sobelXBtn)
         vbox.addStretch()
         vbox.addWidget(self.sobelYBtn)
+        vbox.addStretch()
+        vbox.addWidget(self.prewittXBtn)
+        vbox.addStretch()
+        vbox.addWidget(self.prewittYBtn)
         vbox.addStretch()
         vbox.addWidget(self.laplacianBtn)
         vbox.addStretch()
@@ -217,23 +205,28 @@ class ImageProcessor(QMainWindow):
 			self.image=cv2.imread(str(fname))
 			self.toggleOperatorButtons(True)
 
-    def saveFun(self):
+    def saveImage(self):
+		 
 		if not os.path.exists("output"):
 			os.makedirs("output")
-		cv2.imwrite('./output/output.jpg',self.image)
-		self.showdialog("image is saved successfully.","Information")
+		try:
+			cv2.imwrite('./output/output.jpg',self.image)
+			self.showdialog("image is saved successfully.","Information")
+		except:
+			self.showdialog("Nothing to save","Information")
 
     def getImage(self):
         fname = QFileDialog.getOpenFileName(self, 'Open file','./',"Image files (*.jpg *.gif *.jpeg *.png)")
-        self.l1.setPixmap(QPixmap(fname).scaled(self.l1.size(), Qt.KeepAspectRatio)) # this command works like a charm
-        self.l1.adjustSize()     
-        self.image=cv2.imread(str(fname))
-        self.toggleOperatorButtons(True)
+        if(fname != ""):
+	        self.l1.setPixmap(QPixmap(fname).scaled(self.l1.size(), Qt.KeepAspectRatio)) # this command works like a charm
+	        self.l1.adjustSize()     
+	        self.image=cv2.imread(str(fname))
+	        self.toggleOperatorButtons(True)
     
     def toggleOperatorButtons(self,boolean):
         for button in [self.grayScaleBtn, self.gaussianBlurBtn, self.cannyBtn, self.houghPBtn, self.houghBtn, self.sobelXBtn, \
         self.sobelYBtn, self.laplacianBtn, self.adaptiveThresGaussianBtn, self.adaptiveMeanThresBtn,self.simpleThresBtn, self.otsuThresBtn\
-        , self.undoBtn]:
+        , self.undoBtn, self.prewittXBtn, self.prewittYBtn]:
             button.setEnabled(boolean)
             if(boolean):
               #  if(button == self.saveBtn):
@@ -383,6 +376,42 @@ class ImageProcessor(QMainWindow):
         else:
             self.showdialog("image is already converted to gray, undo.","Warning")
 
+    def prewittXFun(self):
+        if(len(self.image.shape) > 2):
+            # log for undo
+            temp_image=copy.copy(self.image)
+            self.imageStack.append(temp_image)
+            self.buttonStack.append(self.prewittXBtn)
+            gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+            kernel = np.zeros(shape=(3,3))
+            kernel[0] = [1,0,-1]
+            kernel[1] = [1,0,-1]
+            kernel[2] = [1,0,-1]
+            self.image = cv2.filter2D(gray,-1,kernel)
+            self.showImage(self.prewittXBtn,self.image)
+            #self.showdialog("done :)","Information")
+        else:
+            self.showdialog("image is already converted to gray, undo.","Warning")
+    
+    def prewittYFun(self):
+        if(len(self.image.shape) > 2):
+            # log for undo
+			temp_image=copy.copy(self.image)
+			self.imageStack.append(temp_image)
+			self.buttonStack.append(self.prewittYBtn)
+
+			gray = cv2.cvtColor(self.image,cv2.COLOR_BGR2GRAY)
+
+			kernel = np.zeros(shape=(3,3))
+			kernel[0] = [1,0, 1]
+			kernel[1] = [0,0, 0]
+			kernel[2] = [-1,-1,-1]			
+			self.image = cv2.filter2D(gray,-1,kernel)
+			self.showImage(self.prewittXBtn,self.image)
+        else:
+            self.showdialog("image is already converted to gray, undo.","Warning")
+
+       
     def cannyFun(self):
         if(len(self.image.shape) > 2):
             minVal = self.getNumberFromUser("Kernel Size","Enter minVal (eg. 10)",10)
