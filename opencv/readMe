@@ -1,0 +1,5 @@
+install opencv 3
+sudo apt-get update
+sudo apt-get upgrade
+
+sudo apt-get install build-essential cmake git pkg-config
