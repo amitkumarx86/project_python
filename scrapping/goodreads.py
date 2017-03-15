@@ -17,6 +17,9 @@ def fetchLinks():
 	get_text = get_url.text
 	soup = BeautifulSoup(get_text, "html.parser")
 	divs = soup.find_all("ul","listTagsTwoColumn")
+
+	thefile = open('firstLevel.links', 'w')
+
 	for div in divs:
 		for a in div.find_all("a"):
 			linkDict.append("https://www.goodreads.com"+str(a.get('href')))
@@ -37,7 +40,11 @@ def fetchLinks():
 		# call second page link fetching
 		print "Got "+str(len(linkDict))+" of type 1 links"
 		try:
-			fetchLinks2(linkDict)
+			# fetchLinks2(linkDict)
+			# write in files
+			
+			for item in linkDict:
+  				thefile.write("%s\n" % item)
 		except:
 			print "fetchLinks2 went wrong"
 		linkDict[:] = []
@@ -49,6 +56,8 @@ def fetchLinks():
 			next = ""
 
 def fetchLinks2(linkDict):
+	thefile = open('secondLevel.links', 'a')
+
 	links = list()
 	# print linkDict
 	print "FetchLink2 called"
@@ -72,7 +81,9 @@ def fetchLinks2(linkDict):
 			
 			print "Got "+str(len(links))+" of type 2 links"
 			try:
-				fetchLinks3(links)
+				# fetchLinks3(links)
+				for item in links:
+  					thefile.write("%s\n" % item)
 			except:
 				print "fetchLinks2 went wrong"
 			links[:] = []	
@@ -190,7 +201,13 @@ def getBookInfo(url):
 	 
 # starting driver module
 if __name__ == "__main__":
-	fetchLinks()
+	# fetchLinks()
+	# fetchLinks2()
+	content=""
+	with open('firstLevel.links') as f:
+		content = f.readlines()
+	content = [x.strip() for x in content]
+	fetchLinks2(content)
 	
 	# getBookInfo("https://www.goodreads.com/book/show/11505797-beautiful-disaster")
 	# getBookInfo("https://www.goodreads.com/book/show/15842441-effortless")

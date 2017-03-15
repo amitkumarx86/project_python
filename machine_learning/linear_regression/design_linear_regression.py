@@ -5,8 +5,8 @@ from matplotlib import style
 import random
 
 style.use('fivethirtyeight')
-# xs = np.array([1,2,3,4,5,6], dtype=np.float64)
-# ys = np.array([5,4,6,5,6,7], dtype=np.float64)
+xs = np.array([1,2,3,4,5,6], dtype=np.float64)
+ys = np.array([5,4,6,5,6,7], dtype=np.float64)
 # ys = np.array([4.4285714285714288, 4.8571428571428577, 5.2857142857142865, 5.7142857142857144, 6.1428571428571432, 6.5714285714285721],dtype=np.float64)
 
 
@@ -40,7 +40,7 @@ def coefficient_of_determination(ys_orig,ys_line):
 	return 1 - (squared_err_regr/squared_err_y_mean)	 
 
 
-xs, ys = create_dataset(40, 80, 2, False)
+# xs, ys = create_dataset(40, 80, 2, False)
 
 m,b = best_fit_slope(xs,ys)
 regression_line = [(m*x)+b for x in xs ]
