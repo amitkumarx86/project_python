@@ -1,31 +1,26 @@
 ## Synopsis
 
-At the top of the file there should be a short introduction and/ or overview that explains **what** the project is. This description should match descriptions added for package managers (Gemspec, package.json, etc.)
+This python scripts enalbes facebook wall to be scrollable using hand gestures.
 
 ## Code Example
 
-Show what the library does as concisely as possible, developers should be able to figure out **how** your project solves their problem by looking at the code example. Make sure the API you are showing off is obvious, and that your code is short and concise.
+if((y2-y1) > 60):
+            print "Scroll Down"
+            driver.execute_script("window.scrollTo("+str(i)+", "+str(end)+");")
+            i = end
+            end = end + 708
+This module in the code scrolls the wall.
 
 ## Motivation
 
-A short description of the motivation behind the creation and maintenance of the project. This should explain **why** the project exists.
+Facebook scrolling is a very common habit which we have. To reduce the pain of thumb or mouse scrolling, we can do this just waving our hand in the air. 
 
 ## Installation
 
-Provide code examples and explanations of how to get the project.
+You should have following modules install in your system:
+Beautifulsoup
+opencv 2 or 3
 
-## API Reference
+## How to run
 
-Depending on the size of the project, if it is small and simple enough the reference docs can be added to the README. For medium size to larger projects it is important to at least provide a link to where the API reference docs live.
-
-## Tests
-
-Describe and show how to run the tests with code examples.
-
-## Contributors
-
-Let people know how they can dive into the project, include important links to things like issue trackers, irc, twitter accounts if applicable.
-
-## License
-
-A short snippet describing the license (MIT, Apache, etc.)
+python fb_scroller.py
